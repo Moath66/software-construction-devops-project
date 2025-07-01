@@ -1,0 +1,338 @@
+/* Color Variables */
+:root {
+  --sidebar-bg: #002b5c; /* Dark blue */
+  --sidebar-text: #e0e0e0; /* Light gray */
+  --sidebar-active-bg: #00a88e; /* Teal */
+  --sidebar-active-text: #ffffff; /* White */
+  --sidebar-hover-bg: #004080; /* Slightly lighter dark blue */
+  --main-bg: #f0f2f5; /* Light gray background for main content */
+  --card-bg: #ffffff; /* White for cards */
+  --border-color: #e0e0e0; /* Light gray border */
+  --text-dark: #1a3e72; /* Dark blue for titles */
+  --text-medium: #444; /* Medium gray for descriptions */
+  --text-light: #666; /* Lighter gray */
+  --welcome-banner-bg: #e6f7f5; /* Light green for welcome banner */
+  --welcome-banner-text: #00a88e; /* Darker green for welcome title */
+  --action-required-bg: #d4edda; /* Light green for action required status */
+  --action-required-text: #155724; /* Dark green text */
+  --no-upcoming-bg: #f8d7da; /* Light red for no upcoming status */
+  --no-upcoming-text: #721c24; /* Dark red text */
+}
+
+/* Base Styles */
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--main-bg);
+  color: var(--text-medium);
+}
+
+/* Dashboard Layout */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 250px; /* Fixed width for sidebar */
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 20px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0; /* Prevent sidebar from shrinking */
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+
+.sidebar-logo-badge {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+.sidebar-panel-text {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  overflow-y: auto; /* Enable scrolling for long menus */
+  padding: 0 10px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  margin-bottom: 5px;
+}
+
+.sidebar-menu-button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 15px;
+  background-color: transparent;
+  border: none;
+  color: var(--sidebar-text);
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sidebar-menu-button:hover {
+  background-color: var(--sidebar-hover-bg);
+}
+
+.sidebar-menu-button.active {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  font-weight: 600;
+}
+
+.sidebar-menu-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.sidebar-group-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 15px 20px 5px;
+  margin-top: 15px;
+}
+
+.sidebar-footer {
+  padding: 20px 10px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 20px;
+}
+
+/* Main Content */
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  background-color: var(--main-bg);
+}
+
+.main-header {
+  margin-bottom: 30px;
+}
+
+.main-header h1 {
+  font-size: 28px;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.welcome-text {
+  font-size: 16px;
+  color: var(--text-light);
+}
+
+/* Welcome Banner */
+.welcome-banner {
+  background-color: var(--welcome-banner-bg);
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid rgba(0, 168, 142, 0.2); /* Border matching the green */
+}
+
+.welcome-title {
+  font-size: 24px;
+  color: var(--welcome-banner-text);
+  margin-bottom: 10px;
+}
+
+.welcome-description {
+  font-size: 16px;
+  color: var(--text-medium);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Section Titles */
+.section-title {
+  font-size: 20px;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+}
+
+/* Activity Overview Section */
+.activity-overview-section {
+  margin-bottom: 30px;
+}
+
+.activity-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.activity-card {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.activity-card h4 {
+  font-size: 16px;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.activity-value {
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.activity-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.activity-status.action-required {
+  background-color: var(--action-required-bg);
+  color: var(--action-required-text);
+}
+
+.activity-status.no-upcoming {
+  background-color: var(--no-upcoming-bg);
+  color: var(--no-upcoming-text);
+}
+
+.activity-status.no-active-reports {
+  background-color: var(--action-required-bg); /* Using green for "no unresolved" as it's a good state */
+  color: var(--action-required-text);
+}
+
+/* Community Updates / Recent Logs Section */
+.community-updates-section {
+  margin-bottom: 30px;
+}
+
+.update-card {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--border-color);
+  margin-bottom: 15px;
+}
+
+.update-card h4 {
+  font-size: 18px;
+  color: var(--text-dark);
+  margin-bottom: 5px;
+}
+
+.update-date {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.update-description {
+  font-size: 15px;
+  color: var(--text-medium);
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.read-more {
+  color: var(--sidebar-active-bg); /* Teal color for links */
+  text-decoration: none;
+  font-weight: 500;
+  transition: text-decoration 0.2s ease;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    padding: 10px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar-header {
+    padding: 10px 20px;
+    border-bottom: none;
+    margin-bottom: 10px;
+  }
+
+  .sidebar-nav {
+    padding: 0 10px;
+  }
+
+  .sidebar-menu-button {
+    padding: 8px 15px;
+    font-size: 15px;
+  }
+
+  .sidebar-group-label {
+    padding: 10px 20px 5px;
+    margin-top: 10px;
+  }
+
+  .sidebar-footer {
+    padding: 10px 10px 0;
+    margin-top: 10px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .main-header h1 {
+    font-size: 24px;
+  }
+
+  .welcome-title {
+    font-size: 20px;
+  }
+
+  .activity-cards-container {
+    grid-template-columns: 1fr; /* Stack cards on small screens */
+  }
+}

@@ -1,0 +1,91 @@
+/* src/components/ConfirmDialog.css */
+.confirm-dialog-overlay .modal-content {
+  /* Specific class for confirm dialog modal */
+  background-color: var(--card-bg, white);
+  padding: 1.5rem 2rem; /* Adjusted padding */
+  border-radius: 12px;
+  box-shadow: var(--shadow, 0 5px 15px rgba(0, 0, 0, 0.2));
+  width: 100%;
+  max-width: 450px;
+  text-align: center; /* Center content by default */
+  animation: fadeInModal 0.3s ease-out; /* Re-use animation */
+}
+
+.confirm-dialog-modal-content .modal-header {
+  display: flex;
+  justify-content: space-between; /* Title on left, close on right */
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+}
+
+.confirm-dialog-modal-content .modal-header h3 {
+  /* Changed from h2 to h3 for semantic hierarchy */
+  margin: 0;
+  font-size: 1.25rem; /* Slightly smaller than form title */
+  font-weight: 600;
+  color: var(--text-color, #333);
+  text-align: left; /* Align title to left */
+}
+
+.confirm-dialog-modal-content .modal-close-button {
+  background: none;
+  border: none;
+  font-size: 1.75rem;
+  font-weight: 300;
+  color: var(--muted-text-color, #6c757d);
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+.confirm-dialog-modal-content .modal-close-button:hover {
+  color: var(--text-color, #333);
+}
+
+.confirm-dialog-message {
+  font-size: 1.05rem; /* Slightly larger for readability */
+  color: var(--text-color, #333);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  text-align: left; /* Align message to left for better reading */
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end; /* Align buttons to the right */
+  gap: 0.75rem;
+  margin-top: 1rem; /* Space above buttons */
+}
+
+/* Re-use button styles from UserForm.css or ensure consistency */
+.confirm-dialog-actions .button-cancel {
+  background-color: #f1f3f5;
+  color: var(--text-color, #333);
+  border: 1px solid #dee2e6;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.confirm-dialog-actions .button-cancel:hover {
+  background-color: #e9ecef;
+}
+
+.confirm-dialog-actions .button-confirm-action {
+  background-color: var(
+    --danger-color,
+    #e74c3c
+  ); /* Red for confirm delete/destructive actions */
+  color: white;
+  padding: 0.7rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.confirm-dialog-actions .button-confirm-action:hover {
+  background-color: var(--danger-hover-color, #c0392b);
+}
