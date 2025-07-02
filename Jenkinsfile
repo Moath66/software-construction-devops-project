@@ -1,10 +1,10 @@
 pipeline {
-    agent { label 'built-in' }  // Force use of main Jenkins node
+    agent { label 'built-in' }  // ✅ Good - Forces main Jenkins node
     
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
-        BUILD_NUMBER = "${env.BUILD_NUMBER}"
+        DOCKER_TAG = "${env.BUILD_NUMBER}"  // ✅ FIXED: Define DOCKER_TAG
     }
     
     stages {
@@ -21,7 +21,7 @@ pipeline {
                 checkout scm
             }
         }
-
+        
         stage('Docker Build & Tag') {
             steps {
                 echo 'Building Docker Image with Backend and Frontend...'
@@ -36,12 +36,13 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                    // ✅ FIXED: Use correct credential name
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
                         if (isUnix()) {
                             sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
                             sh "docker push ${DOCKER_IMAGE_NAME}:latest"
@@ -53,7 +54,7 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Deploy to Kubernetes') {
             steps {
                 echo 'Deploying to Kubernetes Cluster...'
@@ -71,7 +72,7 @@ pipeline {
             }
         }
     }
-
+    
     post {
         always {
             echo 'Pipeline completed. Cleaning Docker cache...'
@@ -83,11 +84,9 @@ pipeline {
                 }
             }
         }
-
         success {
             echo 'Pipeline succeeded! 🎉'
         }
-
         failure {
             echo 'Pipeline failed! ❌'
         }
