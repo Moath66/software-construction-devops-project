@@ -1,67 +1,65 @@
-# Node modules
+# === Node modules ===
 **/node_modules/
-node_modules/
-css_backend/node_modules/
-css_frontend/node_modules/
 
-# Build outputs
-**/build/
-**/dist/
+# === Build outputs ===
 css_frontend/build/
 css_backend/dist/
+**/build/
+**/dist/
 css_backend/uploads/
 
-# Logs and temp files
-**/*.log
+# === Logs and temp files ===
 logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment and config files
+# === Environment variables ===
 .env
-.env*
+.env.*
 **/.env*
 
-# IDE and OS files
+# === OS and IDE files ===
 .vscode/
 .idea/
-*.swp
-*.swo
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
 
-# Git files
+# === Git and runtime files ===
 .git/
-
-# Runtime data
 pids/
 *.pid
-*.seed
 *.pid.lock
+*.seed
 
-# Coverage directory
+# === Coverage reports ===
 coverage/
 **/coverage/
 
-# Temporary folders
+# === Temporary files/folders ===
 tmp/
 temp/
 **/tmp/
 **/temp/
 
-# Test files
+# === Tests ===
 **/*.test.js
 **/*.spec.js
 **/test/
 **/tests/
 
-# Documentation
-**/*.md
+# === Documentation ===
 README.md
 CHANGELOG.md
+**/*.md
 
-# CI/CD configs (if not used in container)
+# === CI/CD config files (optional) ===
 .github/
 .gitlab-ci.yml
 .travis.yml
+Dockerfile
+docker-compose.yml
+Jenkinsfile
