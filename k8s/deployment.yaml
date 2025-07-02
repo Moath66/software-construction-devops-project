@@ -5,7 +5,7 @@ metadata:
   labels:
     app: software-construction-app
 spec:
-  replicas: 2
+  replicas: 1  # Reduced for local testing
   selector:
     matchLabels:
       app: software-construction-app
@@ -24,20 +24,9 @@ spec:
           value: "production"
         resources:
           requests:
-            memory: "256Mi"
-            cpu: "250m"
+            memory: "128Mi"  # Reduced for local
+            cpu: "100m"
           limits:
-            memory: "512Mi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-          initialDelaySeconds: 5
-          periodSeconds: 5
+            memory: "256Mi"  # Reduced for local
+            cpu: "200m"
+        # Remove health checks for now to simplify
