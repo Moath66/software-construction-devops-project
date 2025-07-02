@@ -8,6 +8,13 @@ pipeline {
     }
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                echo 'Cleaning workspace before build...'
+                cleanWs()
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
