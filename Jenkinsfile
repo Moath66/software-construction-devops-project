@@ -2,7 +2,7 @@ pipeline {
     agent { label 'built-in' }
     
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')  // ✅ No hyphen
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
         DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
                         bat "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
                         bat "docker push ${DOCKER_IMAGE_NAME}:latest"
