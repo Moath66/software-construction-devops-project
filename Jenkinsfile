@@ -75,13 +75,11 @@ pipeline {
     post {
         always {
             echo 'Pipeline completed. Cleaning Docker cache...'
-            node {
-                script {
-                    if (isUnix()) {
-                        sh 'docker system prune -f'
-                    } else {
-                        bat 'docker system prune -f'
-                    }
+            script {
+                if (isUnix()) {
+                    sh 'docker system prune -f'
+                } else {
+                    bat 'docker system prune -f'
                 }
             }
         }
