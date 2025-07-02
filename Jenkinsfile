@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    
+
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
     }
-    
+
     stages {
         stage('Clean Workspace') {
             steps {
@@ -21,7 +21,7 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Docker Build & Tag') {
             steps {
                 echo 'Building Docker Image with Backend and Frontend...'
@@ -36,7 +36,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
@@ -53,35 +53,43 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy to Kubernetes') {
             steps {
                 echo 'Deploying to Kubernetes Cluster...'
                 script {
-                    if (isUnix()) {
-                        sh 'kubectl apply -f k8s/'
+                    if (fileExists('k8s/')) {
+                        if (isUnix()) {
+                            sh 'kubectl apply -f k8s/'
+                        } else {
+                            bat 'kubectl apply -f k8s/'
+                        }
                     } else {
-                        bat 'kubectl apply -f k8s/'
+                        error "Kubernetes config folder 'k8s/' not found!"
                     }
                 }
             }
         }
     }
-    
+
     post {
         always {
             echo 'Pipeline completed. Cleaning Docker cache...'
-            script {
-                if (isUnix()) {
-                    sh 'docker system prune -f'
-                } else {
-                    bat 'docker system prune -f'
+            node {
+                script {
+                    if (isUnix()) {
+                        sh 'docker system prune -f'
+                    } else {
+                        bat 'docker system prune -f'
+                    }
                 }
             }
         }
+
         success {
             echo 'Pipeline succeeded! 🎉'
         }
+
         failure {
             echo 'Pipeline failed! ❌'
         }
