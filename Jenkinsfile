@@ -22,39 +22,9 @@ pipeline {
             }
         }
         
-        stage('Build Backend') {
+        stage('Docker Build & Tag') {
             steps {
-                echo 'Building Backend Application...'
-                dir('css_backend') {
-                    script {
-                        if (isUnix()) {
-                            sh 'npm install'
-                        } else {
-                            bat 'npm install'
-                        }
-                    }
-                }
-            }
-        }
-        
-        stage('Build Frontend') {
-            steps {
-                echo 'Building Frontend Application...'
-                dir('css_frontend') {
-                    script {
-                        if (isUnix()) {
-                            sh 'npm install'
-                        } else {
-                            bat 'npm install'
-                        }
-                    }
-                }
-            }
-        }
-        
-        stage('Create Docker Image') {
-            steps {
-                echo 'Creating Docker Image...'
+                echo 'Building Docker Image with Backend and Frontend...'
                 script {
                     if (isUnix()) {
                         sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
@@ -86,7 +56,7 @@ pipeline {
         
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to Kubernetes...'
+                echo 'Deploying to Kubernetes Cluster...'
                 script {
                     if (isUnix()) {
                         sh 'kubectl apply -f k8s/'
@@ -100,7 +70,7 @@ pipeline {
     
     post {
         always {
-            echo 'Pipeline completed!'
+            echo 'Pipeline completed. Cleaning Docker cache...'
             script {
                 if (isUnix()) {
                     sh 'docker system prune -f'
