@@ -1,12 +1,12 @@
 pipeline {
-    agent any
-
+    agent { label 'built-in' }  // Force use of main Jenkins node
+    
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
+        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
-        DOCKER_TAG = "${BUILD_NUMBER}"
+        BUILD_NUMBER = "${env.BUILD_NUMBER}"
     }
-
+    
     stages {
         stage('Clean Workspace') {
             steps {
@@ -14,7 +14,7 @@ pipeline {
                 cleanWs()
             }
         }
-
+        
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
