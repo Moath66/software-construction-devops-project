@@ -1,10 +1,10 @@
 pipeline {
-    agent { label 'built-in' }  // ✅ Good - Forces main Jenkins node
+    agent { label 'built-in' }
     
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"  // ✅ FIXED: Define DOCKER_TAG
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
     }
     
     stages {
@@ -26,13 +26,8 @@ pipeline {
             steps {
                 echo 'Building Docker Image with Backend and Frontend...'
                 script {
-                    if (isUnix()) {
-                        sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
-                        sh "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
-                    } else {
-                        bat "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
-                        bat "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
-                    }
+                    bat "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                    bat "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
                 }
             }
         }
@@ -41,15 +36,10 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    // ✅ FIXED: Use correct credential name
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials') {
-                        if (isUnix()) {
-                            sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
-                            sh "docker push ${DOCKER_IMAGE_NAME}:latest"
-                        } else {
-                            bat "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
-                            bat "docker push ${DOCKER_IMAGE_NAME}:latest"
-                        }
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
+                        bat "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                        bat "docker push ${DOCKER_IMAGE_NAME}:latest"
                     }
                 }
             }
@@ -60,11 +50,7 @@ pipeline {
                 echo 'Deploying to Kubernetes Cluster...'
                 script {
                     if (fileExists('k8s/')) {
-                        if (isUnix()) {
-                            sh 'kubectl apply -f k8s/'
-                        } else {
-                            bat 'kubectl apply -f k8s/'
-                        }
+                        bat 'kubectl apply -f k8s/'
                     } else {
                         error "Kubernetes config folder 'k8s/' not found!"
                     }
@@ -75,12 +61,12 @@ pipeline {
     
     post {
         always {
-            echo 'Pipeline completed. Cleaning Docker cache...'
             script {
-                if (isUnix()) {
-                    sh 'docker system prune -f'
-                } else {
+                try {
+                    echo 'Pipeline completed. Cleaning Docker cache...'
                     bat 'docker system prune -f'
+                } catch (Exception e) {
+                    echo "Docker cleanup failed: ${e.getMessage()}"
                 }
             }
         }
