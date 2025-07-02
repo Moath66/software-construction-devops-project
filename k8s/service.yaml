@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: software-construction-service
+  labels:
+    app: software-construction-app
+spec:
+  type: NodePort
+  ports:
+  - port: 5000
+    targetPort: 5000
+    nodePort: 30080
+  selector:
+    app: software-construction-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: software-construction-loadbalancer
+  labels:
+    app: software-construction-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: software-construction-app
