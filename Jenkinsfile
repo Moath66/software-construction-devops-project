@@ -1,12 +1,12 @@
 pipeline {
     agent any
-    
+
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
     }
-    
+
     stages {
         stage('Checkout') {
             steps {
@@ -14,7 +14,7 @@ pipeline {
                 checkout scm
             }
         }
-        
+
         stage('Build Backend') {
             steps {
                 echo 'Building Backend Application...'
@@ -29,7 +29,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build Frontend') {
             steps {
                 echo 'Building Frontend Application...'
@@ -44,7 +44,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Create Docker Image') {
             steps {
                 echo 'Creating Docker Image...'
@@ -59,7 +59,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Push to Docker Hub') {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
@@ -76,8 +76,8 @@ pipeline {
                 }
             }
         }
-        
-              stage('Deploy to Kubernetes') {
+
+        stage('Deploy to Kubernetes') {
             steps {
                 echo 'Deploying to Kubernetes...'
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
@@ -91,8 +91,8 @@ pipeline {
                 }
             }
         }
+    }
 
-    
     post {
         always {
             echo 'Pipeline completed!'
