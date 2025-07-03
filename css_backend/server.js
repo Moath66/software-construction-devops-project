@@ -1,4 +1,3 @@
-// server.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -76,6 +75,13 @@ app.use("/api/users", userRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/visitors", visitorRoutes);
 app.use("/api/maintenance", maintenanceRoutes);
+
+// ✅ Serve Frontend React App (for all other routes)
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
 
 // ✅ Start Server
 const PORT = process.env.PORT || 5000;
