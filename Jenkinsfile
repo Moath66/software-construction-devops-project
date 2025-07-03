@@ -1,20 +1,13 @@
 pipeline {
-    agent { label 'built-in' }
+    agent any
     
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')  // ✅ No hyphen
+        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials')
         DOCKER_IMAGE_NAME = 'moath070/software-construction-app'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        DOCKER_TAG = "${BUILD_NUMBER}"
     }
     
     stages {
-        stage('Clean Workspace') {
-            steps {
-                echo 'Cleaning workspace before build...'
-                cleanWs()
-            }
-        }
-        
         stage('Checkout') {
             steps {
                 echo 'Checking out code from GitHub...'
@@ -22,12 +15,47 @@ pipeline {
             }
         }
         
-        stage('Docker Build & Tag') {
+        stage('Build Backend') {
             steps {
-                echo 'Building Docker Image with Backend and Frontend...'
+                echo 'Building Backend Application...'
+                dir('css_backend') {
+                    script {
+                        if (isUnix()) {
+                            sh 'npm install'
+                        } else {
+                            bat 'npm install'
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Build Frontend') {
+            steps {
+                echo 'Building Frontend Application...'
+                dir('css_frontend') {
+                    script {
+                        if (isUnix()) {
+                            sh 'npm install'
+                        } else {
+                            bat 'npm install'
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Create Docker Image') {
+            steps {
+                echo 'Creating Docker Image...'
                 script {
-                    bat "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
-                    bat "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
+                    if (isUnix()) {
+                        sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                        sh "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
+                    } else {
+                        bat "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                        bat "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
+                    }
                 }
             }
         }
@@ -36,10 +64,14 @@ pipeline {
             steps {
                 echo 'Pushing Docker Image to Docker Hub...'
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        bat "docker login -u %DOCKER_USER% -p %DOCKER_PASS%"
-                        bat "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
-                        bat "docker push ${DOCKER_IMAGE_NAME}:latest"
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        if (isUnix()) {
+                            sh "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                            sh "docker push ${DOCKER_IMAGE_NAME}:latest"
+                        } else {
+                            bat "docker push ${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                            bat "docker push ${DOCKER_IMAGE_NAME}:latest"
+                        }
                     }
                 }
             }
@@ -47,12 +79,12 @@ pipeline {
         
         stage('Deploy to Kubernetes') {
             steps {
-                echo 'Deploying to Kubernetes Cluster...'
+                echo 'Deploying to Kubernetes...'
                 script {
-                    if (fileExists('k8s/')) {
-                        bat 'kubectl apply -f k8s/'
+                    if (isUnix()) {
+                        sh 'kubectl apply -f k8s/'
                     } else {
-                        error "Kubernetes config folder 'k8s/' not found!"
+                        bat 'kubectl apply -f k8s/'
                     }
                 }
             }
@@ -61,12 +93,12 @@ pipeline {
     
     post {
         always {
+            echo 'Pipeline completed!'
             script {
-                try {
-                    echo 'Pipeline completed. Cleaning Docker cache...'
+                if (isUnix()) {
+                    sh 'docker system prune -f'
+                } else {
                     bat 'docker system prune -f'
-                } catch (Exception e) {
-                    echo "Docker cleanup failed: ${e.getMessage()}"
                 }
             }
         }
