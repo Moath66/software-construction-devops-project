@@ -5,7 +5,7 @@ metadata:
   labels:
     app: software-construction-app
 spec:
-  replicas: 1  # Reduced for local testing
+  replicas: 1 # Reduced for local testing
   selector:
     matchLabels:
       app: software-construction-app
@@ -15,18 +15,17 @@ spec:
         app: software-construction-app
     spec:
       containers:
-      - name: software-construction-app
-        image: moath070/software-construction-app:latest
-        ports:
-        - containerPort: 5000
-        env:
-        - name: NODE_ENV
-          value: "production"
-        resources:
-          requests:
-            memory: "128Mi"  # Reduced for local
-            cpu: "100m"
-          limits:
-            memory: "256Mi"  # Reduced for local
-            cpu: "200m"
-        # Remove health checks for now to simplify
+        - name: software-construction-app
+          image: moath070/software-construction-app:latest
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: backend-env-secret
+          resources:
+            requests:
+              memory: "128Mi" # Reduced for local
+              cpu: "100m"
+            limits:
+              memory: "256Mi" # Reduced for local
+              cpu: "200m"
