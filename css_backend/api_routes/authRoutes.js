@@ -2,10 +2,15 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 
-// 📌 Login (supports email or username via identifier)
+// ✅ Test Route
+router.get("/test", (req, res) => {
+  res.send("✅ Auth route is working!");
+});
+
+// 📌 Login
 router.post("/login", userController.loginUser);
 
-// 📌 Register (optional if using registration from frontend)
+// 📌 Register
 router.post("/register", userController.createUser);
 
 // 📌 Forgot Password
@@ -66,7 +71,9 @@ router.post("/reset-password", async (req, res) => {
     }
 
     if (Date.now() > user.resetCodeExpires) {
-      return res.status(400).json({ message: "Code expired, please request again" });
+      return res
+        .status(400)
+        .json({ message: "Code expired, please request again" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -75,7 +82,9 @@ router.post("/reset-password", async (req, res) => {
     user.resetCodeExpires = undefined;
     await user.save();
 
-    res.json({ message: "✅ Password reset successfully. Please log in again." });
+    res.json({
+      message: "✅ Password reset successfully. Please log in again.",
+    });
   } catch (err) {
     console.error("🔥 Reset Password Error:", err);
     res.status(500).json({ message: "Server error", error: err.message });
