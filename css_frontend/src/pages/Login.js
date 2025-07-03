@@ -4,8 +4,10 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css"; // Corrected path
-import { API_BASE_URL } from "../api/userApi";
-
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000/api";
+  
+const API_URL = `${API_BASE_URL}/users`;
 // Inline SVG icons for use in the component
 const MailIcon = () => (
   <svg
