@@ -4,7 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import "../styles/Login.css"; // Corrected path
-import { API_BASE_URL } from "../api/userApis";
+import { API_BASE_URL } from "../api/userApi";
 
 // Inline SVG icons for use in the component
 const MailIcon = () => (
