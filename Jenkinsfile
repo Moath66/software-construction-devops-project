@@ -77,19 +77,21 @@ pipeline {
             }
         }
         
-        stage('Deploy to Kubernetes') {
+              stage('Deploy to Kubernetes') {
             steps {
                 echo 'Deploying to Kubernetes...'
-                script {
-                    if (isUnix()) {
-                        sh 'kubectl apply -f k8s/'
-                    } else {
-                        bat 'kubectl apply -f k8s/'
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    script {
+                        if (isUnix()) {
+                            sh 'kubectl apply -f k8s/'
+                        } else {
+                            bat 'kubectl apply -f k8s/'
+                        }
                     }
                 }
             }
         }
-    }
+
     
     post {
         always {
