@@ -126,6 +126,6 @@ npm run build
 | Moath  Morsy	       | Team leader / "Set up GitHub repository for DevOps project"     |
 | Zuhayer  Siddique	   | Web Developer / "Deploy application using Kubernetes"           |
 | Sakif Hossain        | Web Developer / "Configure Jenkins CI/CD Pipeline"              |
-| Mohamed Sami	       | Web Developer / "Create Docker containerization for application"|
+| Mohamed Sami	       | Web Developer / "Create Docker containerization"|
 | Mohammad hatem	     | Web Developer /"Code refactoring and smell detection"           |
 
